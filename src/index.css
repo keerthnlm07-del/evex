@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-burgundy: #4B0718;
+    --color-dark-wine: #350713;
+    --color-burgundy-accent: #760F2A;
+    --color-cream: #FFF8F3;
+    --color-warm-beige: #F4E8DF;
+    --color-dark-text: #260C13;
+    --color-muted-text: #8B7377;
+    --color-success-green: #238653;
+    --color-border: #EDE0D7;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  input, textarea, select {
+    user-select: text;
+  }
+
+  body {
+    background-color: #FFF8F3;
+    color: #260C13;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(75, 7, 24, 0.25);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 7, 24, 0.5);
+  }
+}
+
+.font-serif-brand {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2.5s infinite ease-in-out;
+}

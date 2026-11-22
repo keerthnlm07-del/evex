@@ -1,0 +1,8 @@
+{
+  "appId": "com.evex.mobile",
+  "appName": "EVEX",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
