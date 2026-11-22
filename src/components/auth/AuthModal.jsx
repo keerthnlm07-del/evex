@@ -344,6 +344,9 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSucce
                 type="button"
                 disabled={loading}
                 onClick={async () => {
+                  setTab('signin');
+                  setEmail('customer.demo@evex.app');
+                  setPassword('EvexDemo@2026!');
                   setLoading(true);
                   setError('');
                   try {
@@ -366,6 +369,9 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSucce
                 type="button"
                 disabled={loading}
                 onClick={async () => {
+                  setTab('signin');
+                  setEmail('manager.demo@evex.app');
+                  setPassword('EvexDemo@2026!');
                   setLoading(true);
                   setError('');
                   try {
@@ -388,6 +394,9 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSucce
                 type="button"
                 disabled={loading}
                 onClick={async () => {
+                  setTab('signin');
+                  setEmail('seeker.demo@evex.app');
+                  setPassword('EvexDemo@2026!');
                   setLoading(true);
                   setError('');
                   try {

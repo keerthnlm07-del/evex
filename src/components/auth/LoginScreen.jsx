@@ -220,6 +220,8 @@ export const LoginScreen = ({ onNavigateToRegister, onBackToRoles }) => {
               type="button"
               disabled={loading}
               onClick={async () => {
+                setEmailOrPhone('customer.demo@evex.app');
+                setPassword('EvexDemo@2026!');
                 setLoading(true);
                 setError('');
                 try {
@@ -240,6 +242,8 @@ export const LoginScreen = ({ onNavigateToRegister, onBackToRoles }) => {
               type="button"
               disabled={loading}
               onClick={async () => {
+                setEmailOrPhone('manager.demo@evex.app');
+                setPassword('EvexDemo@2026!');
                 setLoading(true);
                 setError('');
                 try {
@@ -260,6 +264,8 @@ export const LoginScreen = ({ onNavigateToRegister, onBackToRoles }) => {
               type="button"
               disabled={loading}
               onClick={async () => {
+                setEmailOrPhone('seeker.demo@evex.app');
+                setPassword('EvexDemo@2026!');
                 setLoading(true);
                 setError('');
                 try {

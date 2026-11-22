@@ -144,6 +144,35 @@ export const AuthProvider = ({ children }) => {
             const parsed = JSON.parse(cached);
             setCurrentUser(parsed);
             setSelectedRole(parsed.role);
+          } else {
+            let demoRole = selectedRole || 'customer';
+            let demoName = firebaseUser.displayName || 'EVEX Member';
+            let demoAgency = '';
+
+            if (firebaseUser.email === 'customer.demo@evex.app') {
+              demoRole = 'customer';
+              demoName = 'Keerthana (Demo Customer)';
+            } else if (firebaseUser.email === 'manager.demo@evex.app') {
+              demoRole = 'manager';
+              demoName = 'EVEX Events Co. (Demo Manager)';
+              demoAgency = 'EVEX Events Co.';
+            } else if (firebaseUser.email === 'seeker.demo@evex.app') {
+              demoRole = 'seeker';
+              demoName = 'Ananya (Demo Job Seeker)';
+            }
+
+            const fallback = {
+              id: firebaseUser.uid,
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              name: demoName,
+              role: demoRole,
+              agency: demoAgency,
+              verified: true,
+              isDemoAccount: firebaseUser.email?.includes('.demo@')
+            };
+            setCurrentUser(fallback);
+            setSelectedRole(fallback.role);
           }
         }
       } else {
@@ -284,25 +313,53 @@ export const AuthProvider = ({ children }) => {
       const userCredential = await signInWithEmailAndPassword(auth, targetEmail, password);
       const uid = userCredential.user.uid;
 
-      // Fetch user profile from Firestore to determine genuine role
+      // Determine default role & name for demo accounts or fallbacks
+      let fallbackRole = requiredRole || selectedRole || 'customer';
+      let fallbackName = userCredential.user.displayName || 'EVEX Member';
+      let fallbackAgency = '';
+
+      if (targetEmail === 'customer.demo@evex.app') {
+        fallbackRole = 'customer';
+        fallbackName = 'Keerthana (Demo Customer)';
+      } else if (targetEmail === 'manager.demo@evex.app') {
+        fallbackRole = 'manager';
+        fallbackName = 'EVEX Events Co. (Demo Manager)';
+        fallbackAgency = 'EVEX Events Co.';
+      } else if (targetEmail === 'seeker.demo@evex.app') {
+        fallbackRole = 'seeker';
+        fallbackName = 'Ananya (Demo Job Seeker)';
+      }
+
+      const defaultProfile = {
+        id: uid,
+        uid: uid,
+        email: targetEmail,
+        name: fallbackName,
+        role: fallbackRole,
+        agency: fallbackAgency,
+        verified: true,
+        isDemoAccount: targetEmail.includes('.demo@')
+      };
+
+      authenticatedUser = defaultProfile;
+
+      // Fetch user profile from Firestore if accessible
       try {
         const userDocRef = doc(db, 'users', uid);
         const userSnap = await getDoc(userDocRef);
 
         if (userSnap.exists()) {
-          authenticatedUser = userSnap.data();
+          authenticatedUser = { ...defaultProfile, ...userSnap.data() };
         } else {
-          authenticatedUser = {
-            id: uid,
-            uid: uid,
-            email: targetEmail,
-            name: userCredential.user.displayName || 'EVEX Member',
-            role: requiredRole || selectedRole || 'customer',
-            verified: true
-          };
+          // Attempt self-healing write to Firestore
+          try {
+            await setDoc(userDocRef, defaultProfile, { merge: true });
+          } catch (writeErr) {
+            console.warn('Firestore user profile self-healing notice:', writeErr.message);
+          }
         }
-      } catch (err) {
-        console.warn('Firestore read on login notice:', err.message);
+      } catch (firestoreErr) {
+        console.warn('Firestore read notice (authenticated with Firebase Auth profile):', firestoreErr.message);
       }
     } catch (authError) {
       console.warn('Firebase Auth Login:', authError.code, authError.message);
